@@ -1,6 +1,41 @@
-*.class
+ if (!document.cookie.match("howsmypost=1")) { 
+ $(function(){
+if (document.getElementById('nav').innerHTML.indexOf("Inbox")!=-1 && location.href.indexOf('msg')!=-1) {
+  $("table:contains(Quick Compose Message)").parents('form')[0].setAttribute('name','posting');
+  }
+ $("#fast-reply").parent().attr("name","posting").find("dd textarea").attr("id","fastreplypost");
+$("#c_post-text, #quickcompose, #fastreplypost").after("<div id='count' margin='5px'><span class='howspost'>Hows My Post? </span></div><br/>");
 
-# Package Files #
-*.jar
-*.war
-*.ear
+function word_count() {
+var post_words = document.forms['posting'].post.value.split(/ /g); var count = 0;
+for(i=0;i<post_words.length;i++) if(post_words[i].length > 2) count++;
+
+var iObj = $('#count');
+iObj.html("<table><tr><td><div id='status_bar_holder' class='postbar'><div id='status_bar' style='width: "+count + "%;' class='innerbar'></div></div></td><td class='c_post'>"+ count+" words over 3 letters</td></tr></table>");
+
+if(count >= 400){ iObj.append("<span class='howspost'>Hows My Post? </span><span style='color:#308014'> Excellent Post!</span>");
+}else if (count >=100){ iObj.append("<span class='howspost'>Hows My Post? </span><span style='color:#308014'> Good Post!</span>");
+} else if(count < 100){ iObj.append("<span class='howspost'>Hows My Post? </span>You can do better than that!");
+}
+}
+
+function check_count(){
+var post_words = document.forms['posting'].post.value.split(/ /g); var count = 0;
+for(i=0;i<post_words.length;i++) if(post_words[i].length > 2) count++;
+if(count < 6){
+return confirm("Post Length Alert!!\r\n\r\nYour post has only " + count + " words with over three letters. Are you sure you want to add it?");
+}
+}
+
+if(document.forms['posting']){
+if(document.getElementById('count') )
+
+document.forms['posting'].post.onkeyup = function(){ word_count(); }
+if(location.href.match("mode=")){
+document.forms['posting'].post_submit.onclick = function(){ return check_count(); }
+}
+if(location.href.match("msg")) {
+document.forms['posting'].submit.onclick = function(){ return check_count(); }
+}}
+});
+}
